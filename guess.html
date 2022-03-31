@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body><!-- -->
+    <h1>Number</h1>
+    <p>blah blah blah 1 to 100</p>
+    <p></p>
+    <input type="number" id="guess" name="guess"/>
+    <button onclick="checkGuess()">Check it</button>
+    <div id="response"></div>
+<script>
+let num = Math.floor (Math.random() * 100) + 1;
+
+function checkGuess () {
+    let guess = document.getElementById('guess').value;
+    console.log(num);
+    if (guess > num) {
+        let response = document.getElementById('response');
+        response.innerHTML = "Too high. Guess lower."
+    }
+    
+    else if (guess < num) {
+        let response = document.getElementById('response');
+        response.innerHTML = "Too low. Guess higher."
+    }
+
+    else {
+        let response = document.getElementById('response');
+        response.innerHTML = "You got it."
+    }
+
+}
+
+</script>
+</body>
+</html>
