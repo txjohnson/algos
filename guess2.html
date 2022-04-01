@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!--
+*  Initialize the game
+   * terms and conditions
+   * rules of the game
+
+*  Get input from user  
+*  Present our guess
+*  Binary Search
+   * take average of range
+-->
+<html>
+<body>
+<h1>Numberator</h1>
+<p>
+Think of a number between 1 and 100. I will try to guess it, but you need to tell me if the number is too high, too low or just right.
+</p>
+<div id="response">???</div>
+
+<button onclick="correct()">Correct</button>
+<button onclick="tooLow()">Its too low</button>
+<button onclick="tooHigh()">Its too high</button>
+<script>
+let l = 1;
+let x = 101;
+let g;
+
+// set g to the average of the range
+function recalc () {
+    g = Math.floor ((x + l) / 2);
+    let response = document.getElementById('response');
+    response.innerHTML = `Is it ${g}?`;
+}
+
+function correct() {
+    let response = document.getElementById('response');
+    response.innerHTML = `Ha ha, I knew I could do it.`;
+}
+
+function tooLow () {
+    l = g;
+    recalc();
+}
+
+function tooHigh () {
+    x = g;
+    recalc();
+}
+
+
+
+recalc();
+</script>
+</body>
+</html>
