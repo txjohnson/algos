@@ -1,0 +1,12 @@
+Play area -- grid 5 x 6
+Need a list of 5 letter words
+Keyboard for letters and then 2 commands, enter and backspace
+Once user entered 5 letters
+    Enter submits the guess
+    Backspace takes away one letter
+
+When a guess is submitted
+    The tiles change to indicate correct, wrong, semicorrect
+    Keyboard is colored that way as well
+
+Every wrong guess, moves down 1 row
