@@ -1,5 +1,12 @@
 let grid = [];
-let kb = [];
+let kb = [];    
+let words = [];
+
+let tries = 0;
+let guess = '';
+let word = '';
+
+let msg = document.getElementById('msg');
 
 // Labels for our buttons
 let labels = [
@@ -40,9 +47,9 @@ function createGrid () {
 */
 function createKeyboard () {
     let div = document.getElementById ('keyboard');
-    for(let i = 0; i < 28; i += 1) {
+    for(let i = 0; i < 28; i++) {
         let b = document.createElement('button');
-
+        
         // if statement to set class. Why does it 
         // work?
         if (i < 10) b.className = 'r1';
@@ -75,8 +82,44 @@ function createKeyboard () {
     the button that was pressed.
 */
 function pressed (what) {
+
+    if (guess.length === 5) {
+        msg.innerHTML = 'Try again';
+        return;
+    }
+
+    let div = grid [5* tries + guess.length];
+    guess += what;
+    div.innerHTML = what;
 }
 
+fetch('words.txt')
+.then ((r) => {return r.text()})
+.then ((t) => {
+    words = t.split (/\r?\n/);
+    word = words[Math.floor(Math.random() * words.length)];
+    createGrid();
+    createKeyboard();
+});
 
-createGrid();
-createKeyboard();
+let obj = {
+    name: 'Theo',
+    height: 7.0,
+    name: 'Bob'
+};
+
+
+obj.name
+
+
+function 
+
+let car = {
+    name: 'Acura',
+    model: 'MDX'
+}
+
+class Car {
+}
+
+acura = new Car( )

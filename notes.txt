@@ -10,3 +10,6 @@ When a guess is submitted
     Keyboard is colored that way as well
 
 Every wrong guess, moves down 1 row
+
+GAme is won when player guess the words
+GAme is lost when there are no more rows

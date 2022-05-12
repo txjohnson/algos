@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!--
+    1. two player make choice between rock, paper, scissors
+    2. compares hands
+    3. rock > scissors, scissors > paper, paper > rock
+    4. ties means try again
+-->
+<html>
+<head>
+
+<style>
+/*
+.game  {
+    border: 6px solid black;
+    border-radius: 16px;
+    padding-left: 16px;
+    padding-bottom: 16px;
+    background: orange;
+}
+
+    background: linear-gradient(-45deg,  #6f00fc 0%,#fc7900 
+
+*/
+
+#main {
+    border: 1px solid black;
+    border-radius: 16px;
+	background: linear-gradient(-45deg,  #6f00fc 0%,#fc7900 50%,#fcc700 100%);
+}
+
+.game {
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    text-align: center;
+}
+
+#msg {
+    font-size: 24px;
+    color: white;
+    text-align: center;
+    padding-top: 10px;
+    height: 64px;
+    margin-top: 32px;
+    margin-bottom: 32px;
+    background-color: cornflowerblue;
+    border-radius: 16px;
+    border: 2px solid black;
+}
+
+button {
+    width: 8em;
+    height: 100px;
+    font-size: 24px;
+    background-color: cornsilk;
+    border: 2px solid black;
+    border-radius: 16px;
+}
+
+
+
+</style>
+</head>
+
+<body>
+
+<div class=""></div>
+
+<div id="main">
+<h1>RockPaperScissorsAnator</h1>
+
+<div class="game">
+
+<div class="info">
+
+<div class="ui">
+<button onclick="rock()">rock</button>
+<button onclick="paper()">paper</button>
+<button onclick="scissors()">scissors</button>
+</div>
+
+<div id="msg"></div>
+
+
+</div>
+</div>
+
+<script>
+let plhand = '';
+let cmhand = '';
+let msg = document.querySelector('#msg');
+
+function rock() {
+    plhand = 'rock';
+    outcome ()
+}
+
+function paper() {
+    plhand = 'paper';
+    outcome ()
+}
+
+function scissors() {
+    plhand = 'scissors';
+    outcome ()
+}
+
+function computerChoose () {
+    const hand = Math.floor (Math.random() * 3);
+    const names = ['rock', 'paper', 'scissor'];
+    cmhand = names[hand];
+}
+
+function outcome () {
+    computerChoose ();
+
+    if (plhand === cmhand) { 
+        tie ();
+    }
+    else if (plhand === 'rock' && cmhand === 'scissors') {
+        win ();
+    }
+    else if (plhand === 'paper' && cmhand === 'rock') {
+        win ();
+    }
+    else if (plhand === 'scissors' && cmhand === 'paper') {
+        win ();
+    }
+    else {
+        lose ();
+    }
+}
+
+function tie () {
+    msg .innerHMTL = `It's a tie, try again.`
+}
+
+function win () {
+    msg .innerHTML = `${plhand} vs ${cmhand} -- You Win!`;
+}
+
+function lose () {
+    msg .innerHTML = `${plhand} vs ${cmhand} -- You Lose! Loser McLoserFace`;
+}
+
+</script>
+</body>
+
+</html>
