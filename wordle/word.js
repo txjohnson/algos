@@ -89,6 +89,7 @@ function pressed (what) {
     }
 
     let div = grid [5* tries + guess.length];
+    console.log(what);
     guess += what;
     div.innerHTML = what;
 }
@@ -111,7 +112,6 @@ function checkGuess () {
         if (lcg[i] === word[i]) {
             grid[row + i].className = 'correct';
             counts [word[i]] -= 1;
-            markCorrect(guess[i]);
         }   
     }
 
@@ -122,11 +122,9 @@ function checkGuess () {
             if (word.indexOf (k) >= 0 && counts[k] > 0) {
                 grid[row + i].className = 'partial';
                 counts[k] -= 1;
-                markPartial (guess[i]);
             }
             else {
                 grid [row + i].className = 'wrong';
-                markWrong (guess[i]);
             }
         }
     }

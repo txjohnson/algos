@@ -1,62 +1,21 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<style>
-#play {
-    width: 340px;
-    margin-left:auto;
-    margin-right: auto;
-    display: grid;
-    grid-template-columns: auto auto auto auto auto;
-}
-
-#play div {
-    border: 1px solid black;
-    height: 64px;
-    width: 64px;
-    font-size: 48px;
-    text-align: center;
-    padding: 0 0;
-    margin-bottom: 2px;
-}
-
-#keyboard {
-    display: flex;
-    flex-wrap:wrap;
-    width: 75%;
-    margin-left :auto;
-    margin-right: auto;
-    justify-content: center;
-}
-
-#keyboard button {
-    border: 1px solid black;
-    border-radius: 6px;
-    height: 48px;
-    font-size: 32px;
-    text-align: center;
-    padding: 0 0;
-}
-
-.r1 {
-    flex-basis: calc(100% / 10);
-}
-
-.ro {
-    flex-basis: calc(100% / 9);
-}
-
-
-</style>
+<link rel="stylesheet" href="word.css" />
 </head>
+
 <body>
+
 <div id="play"></div>
 <div id="keyboard"></div>
 <div id="msg"></div>
+
 <script src="word.js"></script>
 </body>
-</html>
 
+</html>
+<!--
 
 let object = {}
 for (let i = 0; i < word.length; ++i) {
@@ -75,3 +34,5 @@ a = object["address"]
 a = undefined
 
 a = object.address
+
+-->
