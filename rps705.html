@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+</style>
+</head>
+<body>
+
+<h1>Let's Play Rock Paper Scissor</h1>
+
+<p>Make you pick</p>
+
+<button onclick="rock()">Rock</button>
+<button onclick="paper()">Paper</button>
+<button onclick="scissor()">Scissor</button>
+<div id="msg"></div>
+<div id="dir"></div>
+
+<script>
+
+const names = ['rock', 'paper', 'scissor']
+let cpuhand = '';
+let userhand = '';
+
+let msg = document.querySelector('#msg');
+let dir = document.querySelector('#dir');
+
+function computerPick () {
+    let num = Math.floor(Math.random() * 3);
+    cpuhand = names[num];
+}
+
+
+
+function rock () { 
+    userhand = 'rock';
+    play(); 
+}
+
+function paper () { 
+    userhand = 'paper';
+    play(); 
+}
+
+function scissor () { 
+    userhand = 'scissor';
+    play(); 
+}
+
+function play () {
+    computerPick ();
+
+    msg .innerText = `My ${cpuhand} vs your ${userhand}`;
+
+    if (cpuhand == userhand) {
+        dir.innerText =  `A tie! Try again.`;
+    }
+
+    else if (cpuhand === 'rock' && userhand === 'paper') {
+
+    }
+}
+
+function win () {
+}
+
+function lose () {
+}
+
+</script>
+</body>
+</html>

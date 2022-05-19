@@ -1,6 +1,20 @@
 
 
-#command {
-    border-radius: 16px;
-    font-size: 24px;
+button {
+	background: #282A3A;
+	color: #FFF;
+	border-radius: 5px;
+	padding: 10px 20px;
+	border: 0;
+	cursor: pointer;
+	font-size: 18pt;
+	width: 25%;
+}
+
+#board {
+	padding: 20px;
+	display: grid;
+	grid-template-columns: repeat(4, auto);
+	align-items: center;
+	justify-content: center;
 }

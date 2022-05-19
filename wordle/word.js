@@ -93,6 +93,47 @@ function pressed (what) {
     div.innerHTML = what;
 }
 
+function checkGuess () {
+    msg.innerHTML = '';
+
+    let counts = {};
+    let lcg = guess.toLocaleLowerCase ();
+    let row = turn * 5;
+
+    for (let c of word) {
+        if (counts[c] === undefined) 
+            counts[c] = 1;
+        else 
+            counts [c] += 1;
+    }
+
+    for (let i = 0; i < lcg.length; i++) {
+        if (lcg[i] === word[i]) {
+            grid[row + i].className = 'correct';
+            counts [word[i]] -= 1;
+            markCorrect(guess[i]);
+        }   
+    }
+
+    for (let i = 0; i < lcg.length; i++) {
+        let k = lcg[i];
+
+        if (grid [row + i].className !== 'correct') {
+            if (word.indexOf (k) >= 0 && counts[k] > 0) {
+                grid[row + i].className = 'partial';
+                counts[k] -= 1;
+                markPartial (guess[i]);
+            }
+            else {
+                grid [row + i].className = 'wrong';
+                markWrong (guess[i]);
+            }
+        }
+    }
+
+    updateGame ();
+}
+
 fetch('words.txt')
 .then ((r) => {return r.text()})
 .then ((t) => {
@@ -101,25 +142,3 @@ fetch('words.txt')
     createGrid();
     createKeyboard();
 });
-
-let obj = {
-    name: 'Theo',
-    height: 7.0,
-    name: 'Bob'
-};
-
-
-obj.name
-
-
-function 
-
-let car = {
-    name: 'Acura',
-    model: 'MDX'
-}
-
-class Car {
-}
-
-acura = new Car( )

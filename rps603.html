@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<style>
+
+button {
+    color: green;
+    font-size: 24px;
+    border-radius: 16px;
+    width: 128px;
+}
+
+#msg {
+    font-size: 36px;
+    text-align: center;
+}
+
+#dir {
+    margin-top: 8px;
+    color: cornflowerblue;
+    font-size: 36px;
+    border: 2px solid grey;
+    height: 64px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.class {
+    color: red;
+}
+
+</style>
+
+</head>
+<body>
+
+<h1>Let's Play Rock Paper Scissor</h1>
+
+<p>Make you pick</p>
+
+<button onclick="rock()">Rock</button>
+<button onclick="paper()">Paper</button>
+<button onclick="scissor()">Scissor</button>
+<div id="msg"></div>
+<div id="dir"></div>
+<div class="something">This is a div with class</div>
+<script>
+
+const names = ['rock', 'paper', 'scissors']
+let cpuhand = '';
+let userhand = '';
+
+let msg = document.querySelector('#msg');
+let dir = document.querySelector('#dir');
+
+function computerPick () {
+    let num = Math.floor(Math.random() * 3);
+    cpuhand = names[num];
+}
+
+function rock () { 
+    userhand = 'rock';
+    play(); 
+}
+
+function paper () { 
+    userhand = 'paper';
+    play(); 
+}
+
+function scissor () { 
+    userhand = 'scissors';
+    play(); 
+}
+
+function play () {
+    computerPick ();
+
+    msg .innerText = `My ${cpuhand} vs your ${userhand}`;
+
+    if (cpuhand === userhand) {
+        dir.innerText =  `A tie! Try again.`;
+    }
+
+    else if (cpuhand === 'rock' && userhand === 'paper') {
+        win ();
+    }
+
+    else if (cpuhand === 'paper' && userhand === 'scissors') {
+        win ();
+    }
+
+    else if (cpuhand === 'scissors' && userhand === 'rock') {
+        win ();
+    }
+
+    else {
+        lose ();
+    }
+}
+
+function win () {
+    dir.innerText =  `You Win! Try again.`;
+}
+
+function lose () {
+    dir.innerText =  `You Lose! Try again.`;
+}
+
+</script>
+</body>
+</html>
