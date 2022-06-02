@@ -1,8 +1,37 @@
 
 const ui = {
-    button: document.querySelector('#command'),
-    board: document.querySelector('#board'),
+	game:      document.querySelector('.game'),
+	container: document.querySelector('.container'),
+	board:     document.querySelector('#board'),
+	win:       document.querySelector('#win'),
+	lose:      document.querySelector('#lose'),
+	moves:     document.querySelector('#moves'),
+	time:      document.querySelector('#time'),
+	level:     document.querySelector('#level'),
+	command:   document.querySelector('#command'),
 };
+
+
+const levels = [
+	[4, 4], [5, 4], [6, 4], [6, 5], [6, 6], [7, 6], [8, 6]
+];
+
+
+const settings = {
+	flipWaitTime:  1000,
+	timeToPlay:    90,
+};
+
+const gamestate = {
+	totalFlips: 0,
+	timeLeft: 0,
+	level: 1,
+	flipped: [],
+	cooldown: 0,
+	pairsLeft: 0,
+	matched: 0
+};
+
 
 const images = [
 	'images/animal_bird_100.png',
@@ -85,12 +114,48 @@ const images = [
 ];
 
 
+function flipCard(which) {
+	if (gamestate.flipped.length >= 2) 
+		return;
+	
+	which .classList .add ('flipped');
+	gamestate.flipped .push (which);
+	gamestate.totalFlips ++;
+
+	if (gamestate.flipped.length == 2) {
+		const c0 = gamestate.flipped[0].getAttribute('data-index');
+		const c1 = gamestate.flipped[1].getAttribute('data-index');
+		if (c0 === c1) {
+			gamestate.flipped[0].classList.add('matched');
+			gamestate.flipped[1].classList.add('matched');
+			gamestate.matched ++;
+			gamestate.pairsLeft --;
+		}
+
+		setTimeout(() => { flipCardsBack() }, settings.flipWaitTime);
+	}
+
+	if (gamestate.pairsLeft === 0)
+		winner ();
+}
+
+function flipCardsBack () {
+	console.log("flipping back...");
+
+    document.querySelectorAll('.card:not(.matched)').forEach(card => {
+        card.classList.remove('flipped')
+    });
+
+    gamestate.flipped.length = 0;
+}
+
+
 function onCommand () {
-    if (ui.button.innerHTML === 'Start') {
+    if (ui.command.innerHTML === 'Start') {
         play ();
     }
 
-    else if (ui.button.innerHTML === 'Pause') {
+    else if (ui.command.innerHTML === 'Pause') {
         pause();
     }
 
@@ -105,20 +170,48 @@ function play() {
 }
 
 function pause () {
-    ui.button.innerHTML = 'Resume';
+    ui.command.innerHTML = 'Resume';
 }
 
 function resume () {
-    ui.button.innerHTML = 'Pause';
+    ui.command.innerHTML = 'Pause';
+
+	gamestate.loop = setInterval(() => {
+        gamestate.timeLeft--;
+
+        ui.moves.innerText = `${gamestate.totalFlips} moves`
+        ui.time.innerText = `time: ${gamestate.timeLeft} sec left`
+
+		if (gamestate.timeLeft < 1) {
+			console.log ('game lost');
+			loser ();
+		}
+    }, 1000);
 }
 
 function setupGame () {
-    drawCards (6, 3);
+    ui.level.innerText = `level: ${gamestate.level}`
+	ui.lose.style.display = 'none';
+	ui.win.style.display = 'none';
+
+	ui .board .innerText = '';
+	gamestate .timeLeft  = settings.timeToPlay;
+	gamestate .toalFlips = 0;
+
+	generateGame ();
+//    drawCards (4, 4);
+}
+
+function generateGame () {
+	const l = Math.min (levels.length, gamestate.level) - 1;
+	const dimension = levels [l];
+	drawCards (dimension[0], dimension[1]);
 }
 
 function drawCards (width, height) {
     const total = width * height;
     const num_pics = total / 2;
+	gamestate .pairsLeft = num_pics;
 
 	let picks = interleave (shuffle(num_pics), shuffle(num_pics));
 
@@ -166,3 +259,58 @@ function interleave (l1, l2) {
 
 	return combined;
 }
+
+function winner () {
+	clearInterval(gamestate.loop)
+
+	ui.win.innerHTML = `
+		<span class="win-text">
+			You won!<br />
+			with <span class="highlight">${gamestate.totalFlips}</span> moves in
+			under <span class="highlight">${settings.timeToPlay - gamestate.timeLeft}</span> seconds.
+			Press <span class="highlight">Start</span> for the next level. 
+		</span>
+	`
+	ui.win.style.display = 'flex';
+	gamestate .level++;
+	gamestate .loop = null;
+	gamestate .flipped .length = 0;
+
+	ui .command .innerText = 'Start'
+}
+
+function loser () {
+	clearInterval(gamestate.loop)
+
+	ui.lose.innerHTML = `
+		<span class="lose-text">
+			You lose, loser McLoserface!<br />
+			with <span class="highlight">${gamestate.totalFlips}</span> moves.
+			Press <span class="highlight">Start</span> to play again. 
+		</span>
+	`
+	ui.lose.style.display = 'flex';
+	gamestate .level = 1;
+	gamestate .started = false;
+	gamestate .loop = null;
+	gamestate .flipped .length = 0;
+
+	ui .command .innerText = 'Start'
+}
+
+ui.lose.style.display = 'none';
+ui.win.style.display = 'none';
+
+
+document.addEventListener('click', event => {
+	const target = event.target;
+	const parent = target.parentElement;
+
+	if (target.className.includes('card') && !parent.className.includes('flipped')) {
+		flipCard (parent);
+	}
+
+	else if (target.nodeName === 'BUTTON') {
+		onCommand ();
+	}
+});

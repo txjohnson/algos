@@ -1,97 +1,66 @@
 let grid = [];
-let kb = [];    
+let btns = [];
 let words = [];
-
-let tries = 0;
+let turn = 0;
 let guess = '';
-let word = '';
-
+let word;
 let msg = document.getElementById('msg');
 
-// Labels for our buttons
 let labels = [
     'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
     'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',
-    '✔︎', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '✘'];
+    '✔', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '✘'];
 
-/*
-    craeateGrid
-    Create a number of divs for the play area of
-    our game. Note that the grid is arranged using 
-    CSS, so these nested loops can be replaced by 
-    a single loop that creates the same number of 
-    divs.
-*/
-function createGrid () {
-    let div = document.getElementById ('play');
-    for(let i = 0; i < 6; i += 1) {
-        for(let j = 0; j < 5; j += 1) {
-            let d = document.createElement('div');
-            div .appendChild (d);
-            grid .push(d);
-        }    
+function createGrid(where, what, howmany, save) {
+    for(let i = 0; i < howmany; i += 1) {
+        let e = document.createElement(what);
+        where.appendChild (e);
+        save.push(e)
     }
 }
 
-/*
-    createKeyboard
-    create the 28 buttons needed for the keyboard.
-    The CSS handles the layout the first row needs
-    special handling. We can mark which buttons belong to to the first row by setting the class attribute.
-
-    Additionally, the buttons need labels and an
-    action to perform when pressed. Look at the loop variable i. It represents the index of the
-    current button if we start from top left and count to the right. Note our labels above are ordered in the same way.
-
-    We can also set the onclick action for each button. 
-*/
-function createKeyboard () {
-    let div = document.getElementById ('keyboard');
-    for(let i = 0; i < 28; i++) {
-        let b = document.createElement('button');
-        
-        // if statement to set class. Why does it 
-        // work?
-        if (i < 10) b.className = 'r1';
-        else        b.className = 'ro';
-
-        // think about which button we're creating
-        // at the moment and its relationship labels
-        b.innerHTML = labels[i];
-
-        // This is a new feature: Anonymous functions 
-        // or lambdas. This unnamed function will call
-        // the press function and pass it the label of
-        // the button that was pressed.
-        b.onclick = function() { pressed (labels[i]) }
-        div .appendChild (b);
-        kb .push(b);
+function setupButtons() {
+    for (let i = 0; i < 28; i += 1) {
+        if (i < 10) btns[i].className = 'r1';
+        else btns[i].className = 'ro'
+        btns[i]
+        btns[i].innerHTML = labels[i];
+        btns[i].onclick = function() {press (labels[i]) };
     }
 }
 
-/*  The above code can be made clearer and perhaps shorter.
-    createKeyboard() does a lot of the same things as
-    createGrid(). Is there a way combine this common stuff
-    into a single function? Think about it.
-*/
-
-
-/*
-    pressed (what)
-    Handle a press from a button. It receives the label of
-    the button that was pressed.
-*/
-function pressed (what) {
-
-    if (guess.length === 5) {
-        msg.innerHTML = 'Try again';
-        return;
+function press (key) {
+    let row = turn * 5;
+ 
+    if (key === '✘') {
+        if (guess.length > 0) {
+            grid[row + guess.length - 1].innerHTML = '';
+            guess = guess.slice (0, guess.length - 1);
+        }
     }
 
-    let div = grid [5* tries + guess.length];
-    console.log(what);
-    guess += what;
-    div.innerHTML = what;
+    else if (key === '✔') {
+        if (guess.length === 5) {
+            submit ();
+        }
+    } 
+    
+    else if (guess.length < 5) {
+        guess += key;
+        grid[row + guess.length - 1].innerHTML = key;
+    }
+}
+
+
+function submit () {
+    console.log('submitting...')
+    if (words.indexOf(guess.toLocaleLowerCase()) >= 0) {
+        checkGuess ();
+    }
+
+    else {
+        msg.innerHTML = `${guess} is not a word in our dictionary. Try a different word.`
+    }
 }
 
 function checkGuess () {
@@ -102,16 +71,15 @@ function checkGuess () {
     let row = turn * 5;
 
     for (let c of word) {
-        if (counts[c] === undefined) 
-            counts[c] = 1;
-        else 
-            counts [c] += 1;
+        if (counts[c] === undefined) counts[c] = 1;
+        else counts [c] += 1;
     }
 
     for (let i = 0; i < lcg.length; i++) {
         if (lcg[i] === word[i]) {
             grid[row + i].className = 'correct';
             counts [word[i]] -= 1;
+            markCorrect(guess[i]);
         }   
     }
 
@@ -122,9 +90,11 @@ function checkGuess () {
             if (word.indexOf (k) >= 0 && counts[k] > 0) {
                 grid[row + i].className = 'partial';
                 counts[k] -= 1;
+                markPartial (guess[i]);
             }
             else {
                 grid [row + i].className = 'wrong';
+                markWrong (guess[i]);
             }
         }
     }
@@ -132,11 +102,54 @@ function checkGuess () {
     updateGame ();
 }
 
+function updateGame () {
+    if (turn === 6) {
+        msg.innerHTML = `You Lose. The word was ${word}`;
+    }
+
+    else if (guess.toLocaleLowerCase() === word){
+        msg.innerHTML = `You Win!`;
+    }
+
+    else {
+        turn += 1;
+        guess="";
+    }
+}
+
+function letterToButton (a) {
+    console.log(a);
+    let i = labels .indexOf(a);
+    return btns[i];
+}
+
+function markCorrect (a) {
+    let btn = letterToButton (a);
+    btn.classList.remove('partial');
+    btn.classList.add ('correct');
+}
+
+function markPartial (a) {
+    let btn = letterToButton (a);
+    if (!btn.classList .contains ('correct')) 
+        btn.classList.add ('partial');
+}
+
+function markWrong (a) {
+    let btn = letterToButton (a);
+    if (!btn.classList .contains ('correct') && !btn.classList.contains ('partial')) 
+        btn.classList.add ('wrong');
+}
+
+
 fetch('words.txt')
 .then ((r) => {return r.text()})
 .then ((t) => {
     words = t.split (/\r?\n/);
     word = words[Math.floor(Math.random() * words.length)];
-    createGrid();
-    createKeyboard();
+    console.log(word);
+    createGrid(document.getElementById('grid'), 'div', 30, grid);
+    createGrid(document.getElementById('kb'), 'button', 28, btns);
+    setupButtons();
+
 });

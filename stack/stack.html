@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+
+canvas {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+</style>
+<body>
+<canvas id="screen" width="800" height="600"></canvas>
+
+<script>
+let canvas = document.querySelector('#screen');
+let gfx;
+let scrollCounter, camY, mode;
+let xSpeed, ySpeed = 5;
+let height = 50;
+let boxes = [];
+let debris = {x: 0, width: 0};
+
+function setup () {
+    gfx = canvas .getContext ("2d");
+    gfx .font = 'bold 30px sans-serif';
+    boxes .push({x: 300, y: 300, width: 200});
+}
+
+function newBox () {
+    boxes .push ({
+        x: 0, 
+        y: (boxes.length + 10) * height,
+        width: boxes.slice(-1)[0].width });
+}
+
+function gameLoop () {
+    if (mode != 'gameOver')
+        animate ();
+
+    window .requestAnimationFrame (gameLoop);
+}
+
+function animate () {
+    draw ();
+    if (mode == 'bounce')
+        bouncing ();
+    if (mode == 'fall')
+        falling ();
+    moveDebris ();
+    moveCamera ();
+}
+
+function draw () {
+    gfx .clearRect (0, 0, canvas.width, canvas.height);
+    gfx.fillText('score: ' + (boxes.length - 1).toString(), 100, 200);
+
+    for (let n = 0; n < boxes.length; n++) {
+        let box = boxes[n];
+        gfx.fillStyle = 'rgb( 24' + ',' + n * 16 + ',' + n * 16 + ')';
+        gfx.fillRect (box.x, 600 - box.y + camY, box.width, height);
+    }
+
+    gfx.fillStyle = 'red';
+    gfx.fillRect (debris.x, 600 - debris.y + camY, debris.width, height);
+}
+
+function bouncing () {
+    let box = boxes [boxes.length - 1];
+    box.x += xSpeed;
+
+    if (xSpeed > 0 && box.x + box.width > canvas.width)
+        xSpeed = -xSpeed;
+    if (xSpeed < 0 && box.x < 0)
+        xSpeed = -xSpeed;
+}
+
+function falling () {
+    let box = boxes [boxes.length - 1];
+    let prev = boxes [boxes.length - 2];
+
+    box.y -= ySpeed;
+    if (box.y == prev.y + height) {
+        mode = 'bounce';
+        let delta = box.x - prev.x;
+        if (Math.abs (delta) >= box.width)
+            gameOver ();
+
+        debris = { y: box.y, width: delta };
+        box.width = box.width - Math.abs(delta);
+
+        if (box.x > prev.x) {
+            debris.x = box.x + box.width;
+        }
+        else {
+            debris.x = box.x - delta;
+            box.x = prev.x;
+        }
+
+        if (xSpeed > 0)
+            xSpeed++;
+        else
+            xSpeed--;
+
+        scrollCounter = height;
+        newBox ();
+    }
+}
+
+function moveDebris () {
+    debris.y -= ySpeed;
+}
+
+function moveCamera () {
+    if (scrollCounter) {
+        camY++;
+        scrollCounter--;
+    }
+}
+
+function gameOver () {
+    mode = 'gameOver';
+    gfx .fillText ('Game Over. Click to play again', 50, 50);
+}
+
+function restart () {
+    boxes .splice (1, boxes.length - 1);
+    mode = 'bounce';
+    camY = 0;
+    scrollCounter = 0;
+    xSpeed = 2;
+    debris.y = 0;
+    newBox ();
+}
+
+canvas.onpointerdown = function() {
+    if (mode === 'gameOver')
+        restart ();
+    else
+    if (mode == 'bounce')
+        mode = 'fall';
+};
+
+setup();
+restart ();
+gameLoop ();
+
+</script>
+</body>
+
+</html>

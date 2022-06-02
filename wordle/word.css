@@ -1,4 +1,4 @@
-#play {
+#grid {
     width: 340px;
     margin-left:auto;
     margin-right: auto;
@@ -6,7 +6,32 @@
     grid-template-columns: auto auto auto auto auto;
 }
 
-#play div {
+#kb {
+    display: flex;
+    flex-wrap:wrap;
+    margin-left :auto;
+    margin-right: auto;
+    justify-content: center;
+}
+
+#kb button {
+    border: 1px solid black;
+    border-radius: 6px;;
+    height: 48px;
+    font-size: 32px;
+    text-align: center;
+    padding: 0 0;
+}
+
+#msg {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 2em;
+    text-align: center;
+    color: cornflowerblue;
+}
+
+#grid div {
     border: 1px solid black;
     height: 64px;
     width: 64px;
@@ -16,28 +41,21 @@
     margin-bottom: 2px;
 }
 
-#keyboard {
-    display: flex;
-    flex-wrap:wrap;
-    width: 75%;
-    margin-left :auto;
-    margin-right: auto;
-    justify-content: center;
+.r1 { flex-basis: calc(100% / 10); }
+
+.ro { flex-basis: calc(100% / 9); }
+
+.wrong {
+    background-color: grey;
+    color: white;
 }
 
-#keyboard button {
-    border: 1px solid black;
-    border-radius: 6px;
-    height: 48px;
-    font-size: 32px;
-    text-align: center;
-    padding: 0 0;
+.correct {
+    background-color: green;
+    color: white;
 }
 
-.r1 {
-    flex-basis: calc(100% / 10);
-}
-
-.ro {
-    flex-basis: calc(100% / 9);
+.partial {
+    background-color: goldenrod;
+    color: white;
 }

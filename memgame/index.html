@@ -9,9 +9,28 @@
 <body>
 
 <h1>Memory Game</h1>
-<button id="command" onclick="onCommand()">Start</button>
 
-<div id="board"></div>
+<div class="ui">
+	<button id="command">Start</button>
+	<div class="stats">
+		<div class="info" id="moves">0 moves</div>
+		<div class="info" id="time">time: 0 secs left</div>
+		<div class="info" id="level">level: 1</div>
+	</div>
+</div>
+
+<div class="game">
+	<div class="container">
+		<div id="board"></div>
+		<div id="win">
+			You won!<br />
+			with <span id="moves" class="highlight">100</span> moves in
+			under <span id="time" class="highlight">10</span> seconds.
+			Press <span class="highlight">Start</span> for the next level. 
+		</div>
+		<div id="lose">You Lose</div>
+	</div>
+</div>
 
 <script src="main.js"></script>
 </body>
