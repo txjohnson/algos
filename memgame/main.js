@@ -29,7 +29,8 @@ const gamestate = {
 	flipped: [],
 	cooldown: 0,
 	pairsLeft: 0,
-	matched: 0
+	matched: 0,
+	flipTimer: null,
 };
 
 
@@ -115,9 +116,10 @@ const images = [
 
 
 function flipCard(which) {
-	if (gamestate.flipped.length >= 2) 
+	if (gamestate.flipped.length >= 2) {
 		return;
-	
+	}
+
 	which .classList .add ('flipped');
 	gamestate.flipped .push (which);
 	gamestate.totalFlips ++;
@@ -132,16 +134,14 @@ function flipCard(which) {
 			gamestate.pairsLeft --;
 		}
 
-		setTimeout(() => { flipCardsBack() }, settings.flipWaitTime);
+		gamestate.flipTimer = setTimeout(() => { flipCardsBack() }, settings.flipWaitTime);
 	}
 
 	if (gamestate.pairsLeft === 0)
-		winner ();
+		winner();
 }
 
 function flipCardsBack () {
-	console.log("flipping back...");
-
     document.querySelectorAll('.card:not(.matched)').forEach(card => {
         card.classList.remove('flipped')
     });
@@ -149,6 +149,12 @@ function flipCardsBack () {
     gamestate.flipped.length = 0;
 }
 
+function quickFlipCardsBack () {
+	if (gamestate.flipped.length >= 2) {
+		clearTimeout (gamestate.flipTimer);
+		flipCardsBack ();
+	}
+}
 
 function onCommand () {
     if (ui.command.innerHTML === 'Start') {
@@ -196,7 +202,7 @@ function setupGame () {
 
 	ui .board .innerText = '';
 	gamestate .timeLeft  = settings.timeToPlay;
-	gamestate .toalFlips = 0;
+	gamestate .totalFlips = 0;
 
 	generateGame ();
 //    drawCards (4, 4);
@@ -313,4 +319,7 @@ document.addEventListener('click', event => {
 	else if (target.nodeName === 'BUTTON') {
 		onCommand ();
 	}
+
+	else if (target.nodeName === 'IMG')
+		quickFlipCardsBack ();
 });
